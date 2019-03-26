@@ -192,8 +192,8 @@ def extract_titulos():
 
 
 def extract_tempo():
-    querie = "select distinct EXTRACT (year from dat_loc), EXTRACT (month from dat_loc), TO_CHAR(ADD_MONTHS(dat_loc, 1),'mon'), TO_CHAR(dat_loc, 'mon'), EXTRACT (day from dat_loc), dat_loc, TO_CHAR(dat_loc,'HH24'), TO_CHAR(dat_loc,'AM') from locacoes"
-    cursor_logico.execute(querie)
+    query = "select distinct EXTRACT (year from dat_loc), EXTRACT (month from dat_loc), TO_CHAR(ADD_MONTHS(dat_loc, 1),'mon'), TO_CHAR(dat_loc, 'mon'), EXTRACT (day from dat_loc), dat_loc, TO_CHAR(dat_loc,'HH24'), TO_CHAR(dat_loc,'AM') from locacoes"
+    cursor_logico.execute(query)
     linhas = cursor_logico.fetchall()
     tempos = []
     codigo = 1
@@ -207,8 +207,8 @@ def extract_tempo():
 
 
 def extract_locacao():
-    querie = "select cod_soc, cod_tit,cod_art, cod_grav, dat_loc, locacoes.val_loc, nvl((dat_dev - dat_loc), 0), itens_locacoes.val_loc, nvl((dat_dev - dat_prev), 0) from locacoes join itens_locacoes using(cod_soc, dat_loc) join titulos using(cod_tit)"
-    cursor_logico.execute(querie)
+    query = "select cod_soc, cod_tit,cod_art, cod_grav, dat_loc, locacoes.val_loc, nvl((dat_dev - dat_loc), 0), itens_locacoes.val_loc, nvl((dat_dev - dat_prev), 0) from locacoes join itens_locacoes using(cod_soc, dat_loc) join titulos using(cod_tit)"
+    cursor_logico.execute(query)
     linhas = cursor_logico.fetchall()
     locacoes = []
     for i in range(0, len(linhas)):
