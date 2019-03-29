@@ -269,14 +269,22 @@ def load_titulos(t: list):
 def load_tempo(t: list):
     for i in range(0, len(t)):
         comando = "insert into dm_tempo values(:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
-        cursor_dw.execute(comando, (t[i].id_tmp, t[i].nu_ano, t[i].nu_mes, t[i].nu_anomes, t[i].sg_mes, t[i].nm_mesano, t[i].nm_mes, t[i].nu_dia, t[i].dt_tempo, t[i].nu_hora, t[i].turno))
+        try:
+            cursor_dw.execute(comando, (t[i].id_tmp, t[i].nu_ano, t[i].nu_mes, t[i].nu_anomes, t[i].sg_mes, t[i].nm_mesano, t[i].nm_mes, t[i].nu_dia, t[i].dt_tempo, t[i].nu_hora, t[i].turno))
+        except:
+            print('Erro Load Tempo')
+            continue
     print('Load Tempo Concluido')
 
 
 def load_locacao(l: list):
     for i in range(0, len(l)):
         comando = "insert into ft_locacoes values(:1, :2, :3, :4, :5, :6, :7, :8)"
-        cursor_dw.execute(comando, (l[i].id_soc, l[i].id_tit, l[i].id_art, l[i].id_grav, l[i].id_tmp, l[i].vlr_arr, l[i].tmp_dev, l[i].mlt_atr))
+        try:
+            cursor_dw.execute(comando, (l[i].id_soc, l[i].id_tit, l[i].id_art, l[i].id_grav, l[i].id_tmp, l[i].vlr_arr, l[i].tmp_dev, l[i].mlt_atr))
+        except:
+            print('Erro: Load Locacao')
+            continue
     print('Load Locacoes Concluido')
 
 
