@@ -1,42 +1,44 @@
 import pandas as pd
+import numpy as np
+from unidecode import unidecode as un
 import cx_Oracle
 
-def load_local(l: list):
+def load_local(l):
     for i in range(0, len(l)):
         comando = "insert into dm_local values(:1, :2, :3, :4)"
         try:
-            cursor_dw.execute(comando, (l[i][0], l[i][1], l[i][2], l[i][3]))
+            cursor_dw.execute(comando, (int(l.iloc[i,0]), un(str(l.iloc[i,1])), un(str(l.iloc[i,2])), un(str(l.iloc[i,3]))))
         except:
-            print('Erro: Load Local - ' + l[i][1])
+            print('Erro: Load Local - ' + str(l.iloc[i,1]))
             continue
     print('Load Local Concluido')
 
-def load_tempo(l: list):
+def load_tempo(l):
     for i in range(0, len(l)):
         comando = "insert into dm_tempo values(:1, :2, :3, :4)"
         try:
-            cursor_dw.execute(comando, (l[i][0], l[i][1], l[i][2], l[i][3]))
+            cursor_dw.execute(comando, (int(l.iloc[i,0]), int(l.iloc[i,1]), int(l.iloc[i,2]), int(l.iloc[i,3])))
         except:
-            print('Erro: Load Tempo - ' + l[i][0])
+            print('Erro: Load Tempo - ' + str(l.iloc[i,0]))
             continue
     print('Load Tempo Concluido')
 
-def load_dados(l: list):
+def load_dados(l):
     for i in range(0, len(l)):
         comando = "insert into ft_dados values(:1, :2, :3, :4)"
         try:
-            cursor_dw.execute(comando, (l[i][0], l[i][1], l[i][2], l[i][3]))
+            cursor_dw.execute(comando, (int(l.iloc[i,0]), int(l.iloc[i,1]), int(l.iloc[i,2]), float(l.iloc[i,3])))
         except:
-            print('Erro: Load Dados - ' + l[i][0] + ' - ' + l[i][1])
+            print('Erro: Load Dados - ' + str(l.iloc[i,0]) + ' - ' + str(l.iloc[i,1]))
             continue
     print('Load Dados Concluido')
 
 dados = pd.read_csv('Dados.csv')
 dados.columns = ['id_mun','nom_mun','uf','regiao','qnt_ben','valor','anomes','semestre','trimestre','bimestre']
 
-dados_dm_local = (dados.groupby(['id_mun','nom_mun','uf','regiao']).size()).get_values
-dados_dm_tempo = (dados.groupby(['anomes','semestre','trimestre','bimestre']).size()).get_values
-dados_ft_dados = (dados[['id_mun','anomes','qnt_ben','valor']]).get_values
+dados_dm_local = dados.groupby(['id_mun','nom_mun','uf','regiao']).size().reset_index()
+dados_dm_tempo = dados.groupby(['anomes','semestre','trimestre','bimestre']).size().reset_index()
+dados_ft_dados = dados[['id_mun','anomes','qnt_ben','valor']]
 
 # Criando Conexões com os Bancos
 # Param 1 = db_username
