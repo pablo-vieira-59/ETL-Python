@@ -7,9 +7,9 @@
 
 CREATE TABLE dm_local (
     id_local   INTEGER NOT NULL,
-    nm_local   VARCHAR2(40),
+    nm_local   VARCHAR2(60),
     uf         VARCHAR2(2),
-    regiao     VARCHAR2(10)
+    regiao     VARCHAR2(40)
 );
 
 ALTER TABLE dm_local ADD CONSTRAINT dm_local_pk PRIMARY KEY ( id_local );
@@ -40,7 +40,7 @@ ALTER TABLE ft_dados
 
 
 
--- Relatório do Resumo do Oracle SQL Developer Data Modeler: 
+-- RelatÃ³rio do Resumo do Oracle SQL Developer Data Modeler: 
 -- 
 -- CREATE TABLE                             3
 -- CREATE INDEX                             0
