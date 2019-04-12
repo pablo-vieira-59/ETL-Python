@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+from progress.bar import Bar
 
 def get_regiao(id):
     if id >= 1 and id <= 17:
@@ -57,7 +58,6 @@ url = 'http://www.transparencia.gov.br/api-de-dados/bolsa-familia-por-municipio/
 municipios = pd.read_excel('municipios.xls')
 municipios = municipios.get_values()
 municipios = municipios[5:5567,1:3].astype(str)
-
 matriz = []
 ano = 2016
 for i in range(0,3):
@@ -67,6 +67,7 @@ for i in range(0,3):
             mes = '0' + str(j)
         else:
             mes = str(j)
+        bar = Bar(('Mes ' + mes + ':'),max = len(municipios))
         for k in range(0,len(municipios)):
             linha = []
             anomes = str(ano)+mes
@@ -84,10 +85,10 @@ for i in range(0,3):
             bimestre = get_bimestre(int(mes))
             trimestre = get_trimestre(int(mes))
             linha = [id_mun, nome_mun, uf, regiao, qnt_ben, valor, anomes, semestre, trimestre, bimestre]
-            print(linha)
+            #print(linha)
+            bar.next()
             matriz.append(linha)
+        bar.finish()
         dados = pd.DataFrame(matriz, columns=['id_mun','nom_mun','uf','regiao','qnt_ben','valor','anomes','semestre','trimestre','bimestre'])
         dados.to_csv('Dados.csv',index=False, header=True)
     ano += 1
-
-
