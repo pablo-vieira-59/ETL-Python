@@ -54,12 +54,26 @@ def get_response(url, params):
         break
     return resp
 
+def get_values(resp, anomes, id_mun, mes, municipios):
+    resp = resp[0]
+    valor = resp['valor']
+    qnt_ben = resp['quantidadeBeneficiados']
+    uf = resp['municipio']['uf']['sigla']
+    nome_mun = resp['municipio']['nomeIBGE']
+    regiao = get_regiao(int(municipios[k][0]))
+    semestre = get_semestre(int(mes))
+    bimestre = get_bimestre(int(mes))
+    trimestre = get_trimestre(int(mes))
+    linha = [id_mun, nome_mun, uf, regiao, qnt_ben, valor, anomes, semestre, trimestre, bimestre]
+    return linha
+
 url = 'http://www.transparencia.gov.br/api-de-dados/bolsa-familia-por-municipio/'
 municipios = pd.read_excel('municipios.xls')
 municipios = municipios.get_values()
 municipios = municipios[5:5567,1:3].astype(str)
 matriz = []
 ano = 2016
+
 for i in range(0,3):
     for j in range(1,13):
         mes = ''
@@ -69,22 +83,12 @@ for i in range(0,3):
             mes = str(j)
         bar = Bar(('Mes ' + mes + ':'),max = len(municipios))
         for k in range(0,len(municipios)):
-            linha = []
             anomes = str(ano)+mes
             id_mun = municipios[k][0] + municipios[k][1]
             params = dict(mesAno=anomes, codigoIbge=id_mun, pagina=1)
             resp = get_response(url, params)
             resp = resp.json()
-            resp = resp[0]
-            valor = resp['valor']
-            qnt_ben = resp['quantidadeBeneficiados']
-            uf = resp['municipio']['uf']['sigla']
-            nome_mun = resp['municipio']['nomeIBGE']
-            regiao = get_regiao(int(municipios[k][0]))
-            semestre = get_semestre(int(mes))
-            bimestre = get_bimestre(int(mes))
-            trimestre = get_trimestre(int(mes))
-            linha = [id_mun, nome_mun, uf, regiao, qnt_ben, valor, anomes, semestre, trimestre, bimestre]
+            linha = get_values(resp, anomes, id_mun, mes, municipios)
             #print(linha)
             bar.next()
             matriz.append(linha)
